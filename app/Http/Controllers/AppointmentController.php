@@ -73,6 +73,28 @@ class AppointmentController extends Controller
             'appointment_date.after_or_equal' => 'Tanggal janji tidak boleh di masa lalu.',
         ]);
 
+        // Cek bentrok jadwal (dokter)
+        $doctorConflict = Appointment::where('doctor_id', $request->doctor_id)
+            ->whereDate('appointment_date', $request->appointment_date)
+            ->whereTime('appointment_time', $request->appointment_time)
+            ->where('status', '!=', 'dibatalkan')
+            ->exists();
+
+        if ($doctorConflict) {
+            return back()->withInput()->withErrors(['appointment_time' => 'Dokter sudah memiliki janji pada jam tersebut.']);
+        }
+
+        // Cek bentrok jadwal (pasien)
+        $patientConflict = Appointment::where('patient_id', $request->patient_id)
+            ->whereDate('appointment_date', $request->appointment_date)
+            ->whereTime('appointment_time', $request->appointment_time)
+            ->where('status', '!=', 'dibatalkan')
+            ->exists();
+
+        if ($patientConflict) {
+            return back()->withInput()->withErrors(['appointment_time' => 'Pasien sudah memiliki janji pada jam tersebut.']);
+        }
+
         $code = 'APT-' . strtoupper(Str::random(3)) . '-' . now()->format('dmY');
 
         $appointment = Appointment::create([
@@ -135,6 +157,30 @@ class AppointmentController extends Controller
             'appointment_time' => 'required|date_format:H:i',
             'complaint'        => 'nullable|string|max:500',
         ]);
+
+        // Cek bentrok jadwal (dokter)
+        $doctorConflict = Appointment::where('doctor_id', $request->doctor_id)
+            ->whereDate('appointment_date', $request->appointment_date)
+            ->whereTime('appointment_time', $request->appointment_time)
+            ->where('status', '!=', 'dibatalkan')
+            ->where('id', '!=', $appointment->id)
+            ->exists();
+
+        if ($doctorConflict) {
+            return back()->withInput()->withErrors(['appointment_time' => 'Dokter sudah memiliki janji pada jam tersebut.']);
+        }
+
+        // Cek bentrok jadwal (pasien)
+        $patientConflict = Appointment::where('patient_id', $request->patient_id)
+            ->whereDate('appointment_date', $request->appointment_date)
+            ->whereTime('appointment_time', $request->appointment_time)
+            ->where('status', '!=', 'dibatalkan')
+            ->where('id', '!=', $appointment->id)
+            ->exists();
+
+        if ($patientConflict) {
+            return back()->withInput()->withErrors(['appointment_time' => 'Pasien sudah memiliki janji pada jam tersebut.']);
+        }
 
         $appointment->update($request->only(
             'patient_id', 'doctor_id', 'department_id',

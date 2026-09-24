@@ -51,6 +51,16 @@
                         ->latest()->take(6)->get();
 @endphp
 
+@if($stokHabis > 0 || $stokRendah > 0)
+<div style="background-color: #fff5f5; border-left: 4px solid #c53030; color: #9b2c2c; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 1rem;">
+    <div style="font-size: 1.5rem;">⚠️</div>
+    <div>
+        <strong style="display: block; font-size: 1rem; margin-bottom: 0.25rem;">Peringatan Stok Obat!</strong>
+        <span>Terdapat <strong>{{ $stokHabis }}</strong> obat habis dan <strong>{{ $stokRendah }}</strong> obat dengan stok menipis (di bawah 10). <a href="{{ route('obat.index', ['stock'=>'rendah']) }}" style="color: #c53030; font-weight: 600; text-decoration: underline;">Segera lakukan restock</a>.</span>
+    </div>
+</div>
+@endif
+
 <div class="stat-grid">
     <div class="stat-card"><div class="stat-icon" style="background:#faf5ff">💊</div><div class="info"><strong>{{ $totalObat }}</strong><span>Total Jenis Obat</span></div></div>
     <div class="stat-card"><div class="stat-icon" style="background:#fffbeb">⚠️</div><div class="info"><strong>{{ $stokRendah }}</strong><span>Stok Rendah</span></div></div>
