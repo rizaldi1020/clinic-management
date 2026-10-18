@@ -282,6 +282,12 @@
 
         <button type="submit" class="btn-login">Masuk</button>
     </form>
+    <div style="text-align:center;margin-top:1.25rem;font-size:.875rem;color:#718096;border-top:1px solid #e2e8f0;padding-top:1rem">
+        Pasien baru? 
+        <a href="{{ route('register') }}" style="color:#1a6db5;font-weight:600;text-decoration:none">
+        Daftar akun di sini →
+        </a>
+    </div>
 
     <div class="divider">Akun demo untuk testing</div>
     <div class="demo-accounts">
